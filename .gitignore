@@ -398,5 +398,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/OneDriver.PowerSupply/OneDriver.PowerSupply.Basic.gRPC/appsettings.json
+/OneDevice.PowerSupply/OneDevice.PowerSupply.Basic.gRPC/appsettings.json
 *.json

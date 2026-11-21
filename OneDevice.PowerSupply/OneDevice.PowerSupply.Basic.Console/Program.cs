@@ -1,12 +1,12 @@
 ﻿// KD3005P Power Supply Test Program
 
 using System.Runtime.CompilerServices;
-using OneDriver.Toolbox;
+using OneDevice.Toolbox;
 
 Console.WriteLine("=== KD3005P Power Supply Test ===");
 Console.WriteLine();
 
-var powerSupply = OneDriver.PowerSupply.Factory.PowerSupplyFactory.Create(OneDriver.PowerSupply.Factory.PowerSupplyType.Kd3005p);
+var powerSupply = OneDevice.PowerSupply.Factory.PowerSupplyFactory.Create(OneDevice.PowerSupply.Factory.PowerSupplyType.Kd3005p);
 
 // Connect to the power supply
 Console.WriteLine("Connecting to COM5...");

@@ -3,7 +3,7 @@ using System.IO.Ports;
 using OneDevice.Framework.Libs.Validator;
 using Serilog;
 using System.Globalization;
-using OneDriver.Toolbox;
+using OneDevice.Toolbox;
 
 namespace OneDevice.PowerSupply.Basic.Products
 {

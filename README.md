@@ -1,6 +1,6 @@
-# OneDriver.PowerSupply.Abstract
+# OneDevice.PowerSupply.Abstract
 
-🔌 **OneDriver.PowerSupply.Abstract** provides the core abstraction and interfaces for implementing power supply drivers within the [OneDriver](https://github.com/himalayanpeaks/OneDriver) ecosystem.
+🔌 **OneDevice.PowerSupply.Abstract** provides the core abstraction and interfaces for implementing power supply drivers within the [OneDevice](https://github.com/himalayanpeaks/onedevice-framework) ecosystem.
 
 This repository contains the base class and contracts that all power supply drivers — whether built-in or third-party — should inherit from.
 
@@ -10,8 +10,8 @@ This repository contains the base class and contracts that all power supply driv
 
 - Abstract base class for power supply devices
 - Parameter and process data structures
-- Compatible with `OneDriver.Framework` architecture
-- Distributed via NuGet as `OneDriver.PowerSupply.Abstract`
+- Compatible with `OneDevice.Framework` architecture
+- Distributed via NuGet as `OneDevice.PowerSupply.Abstract`
 
 ---
 
@@ -20,5 +20,5 @@ This repository contains the base class and contracts that all power supply driv
 Reference this package in your driver project:
 
 ```bash
-dotnet add package OneDriver.PowerSupply.Abstract
+dotnet add package OneDevice.PowerSupply.Abstract
 
