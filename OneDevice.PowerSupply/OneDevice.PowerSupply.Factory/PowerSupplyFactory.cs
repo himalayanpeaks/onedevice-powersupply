@@ -19,7 +19,7 @@ namespace OneDevice.PowerSupply.Factory
                 case PowerSupplyType.Virtual:
                     break;
                 case PowerSupplyType.Kd3005p:
-                    return new Basic.Device("PowerSupplyVirtual", new ComportValidator(), new Kd3005p());
+                    return new Basic.Device("Kd3005p", new ComportValidator(), new Kd3005p());
                     
             }
             return null;

@@ -5,6 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <PackageIcon>icon.png</PackageIcon>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>2.5.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OneDevice.Module" Version="1.1.0" />
+    <PackageReference Include="OneDevice.Module" Version="1.2.0" />
   </ItemGroup>
 
 </Project>

@@ -70,17 +70,17 @@ namespace OneDevice.PowerSupply.Basic
                 case nameof(ChannelParams.DesiredAmps):
                     var channel = this.Elements.FirstOrDefault(x => sender != null && x.Parameters == (ChannelParams)sender);
                     if (channel != null) index = this.Elements.IndexOf(channel);
-                    if (sender != null) _powerSupplyHal.SetDesiredAmps(index, (((ChannelParams)sender).DesiredAmps));
+                    if (index >= 0) _powerSupplyHal.SetDesiredAmps(index, (((ChannelParams)sender).DesiredAmps));
                     break;
                 case nameof(ChannelParams.DesiredVolts):
                     channel = this.Elements.FirstOrDefault(x => sender != null && x.Parameters == (ChannelParams)sender);
                     if (channel != null) index = this.Elements.IndexOf(channel);
-                    if (sender != null) _powerSupplyHal.SetDesiredVolts(index, (((ChannelParams)sender).DesiredVolts));
+                    if (index >= 0) _powerSupplyHal.SetDesiredVolts(index, (((ChannelParams)sender).DesiredVolts));
                     break;
                 case nameof(ChannelParams.ControlMode):
                     channel = this.Elements.FirstOrDefault(x => sender != null && x.Parameters == (ChannelParams)sender);
                     if (channel != null) index = this.Elements.IndexOf(channel);
-                    if (sender != null) _powerSupplyHal.SetMode(index, (((ChannelParams)sender).ControlMode));
+                    if (index >= 0) _powerSupplyHal.SetMode(index, (((ChannelParams)sender).ControlMode));
                     break;
             }
         }
@@ -110,18 +110,43 @@ namespace OneDevice.PowerSupply.Basic
         private readonly IPowerSupplyHal _powerSupplyHal;
         protected override int CloseConnection() => (int)_powerSupplyHal.Close();
 
-        protected override string GetErrorMessageFromDerived(int code)
-        {
-            throw new NotImplementedException();
-        }
+        // Codes that are not DeviceError values come from the HAL, which knows its own error texts.
+        protected override string GetErrorMessageFromDerived(int code) => _powerSupplyHal.GetErrorMessage(code);
 
         protected override int OpenConnection(string initString) => (int)_powerSupplyHal.Open(initString, Validator);
 
         public override int AllChannelsOff() => (int)_powerSupplyHal.AllOff();
 
-        public override int SetVolts(int channelNumber, double volts) => (int)_powerSupplyHal.SetDesiredVolts(channelNumber, volts);
+        // SetVolts/SetAmps talk to the HAL directly (used by the gRPC service), so they must apply the
+        // same 0..Max limits as the DesiredVolts/DesiredAmps properties.
+        public override int SetVolts(int channelNumber, double volts)
+        {
+            if (!IsValidChannel(channelNumber)) return (int)Module.Definition.DeviceError.InvalidParameter;
+            if (volts < 0 || volts > _powerSupplyHal.MaxVoltageInVolts)
+            {
+                Log.Error("Desired volts {Volts} outside 0..{Max}", volts, _powerSupplyHal.MaxVoltageInVolts);
+                return (int)Module.Definition.DeviceError.InvalidParameter;
+            }
+            return (int)_powerSupplyHal.SetDesiredVolts(channelNumber, volts);
+        }
 
-        public override int SetAmps(int channelNumber, double amps) => (int)_powerSupplyHal.SetDesiredAmps(channelNumber, amps);
+        public override int SetAmps(int channelNumber, double amps)
+        {
+            if (!IsValidChannel(channelNumber)) return (int)Module.Definition.DeviceError.InvalidParameter;
+            if (amps < 0 || amps > _powerSupplyHal.MaxCurrentInAmpere)
+            {
+                Log.Error("Desired amps {Amps} outside 0..{Max}", amps, _powerSupplyHal.MaxCurrentInAmpere);
+                return (int)Module.Definition.DeviceError.InvalidParameter;
+            }
+            return (int)_powerSupplyHal.SetDesiredAmps(channelNumber, amps);
+        }
+
+        private bool IsValidChannel(int channelNumber)
+        {
+            if (channelNumber >= 0 && channelNumber < _powerSupplyHal.NumberOfChannels) return true;
+            Log.Error("Channel {Channel} does not exist (0..{Last})", channelNumber, _powerSupplyHal.NumberOfChannels - 1);
+            return false;
+        }
 
         public override int AllChannelsOn() => (int)_powerSupplyHal.AllOn();
     }
